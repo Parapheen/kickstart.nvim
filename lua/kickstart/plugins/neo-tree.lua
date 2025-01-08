@@ -3,23 +3,31 @@
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
-  version = '*',
+  version = '*', -- Automatically fetch the latest version
   dependencies = {
-    'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
-    'MunifTanjim/nui.nvim',
+    'nvim-lua/plenary.nvim', -- Utility library
+    'nvim-tree/nvim-web-devicons', -- Icons (optional but recommended)
+    'MunifTanjim/nui.nvim', -- UI components
   },
-  cmd = 'Neotree',
+  cmd = 'Neotree', -- Load the plugin only when the `:Neotree` command is used
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>\\', ':Neotree toggle<CR>', desc = 'NeoTree toggle', silent = true },
   },
   opts = {
+    window = {
+      position = 'right', -- Position NeoTree on the right side of the screen
+    },
     filesystem = {
-      window = {
-        mappings = {
-          ['\\'] = 'close_window',
-        },
+      filtered_items = {
+        visible = true, -- Show filtered items
+        hide_dotfiles = false, -- Don't hide dotfiles
+        hide_gitignored = true, -- Hide files ignored by Git
       },
     },
   },
+  config = function(_, opts)
+    require('neo-tree').setup(opts) -- Apply the options
+    -- Keybinding for quick reveal
+    vim.keymap.set('n', '\\', ':Neotree toggle<CR>', { noremap = true, silent = true, desc = 'NeoTree toggle' })
+  end,
 }
